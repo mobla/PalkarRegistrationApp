@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check-in Verification</title>
+</head>
+<body>
+    {% if status == "valid" %}
+        <h2>✅ Welcome {{ attendee.name }}!</h2>
+        <p>Checked in at: {{ attendee.checked_in_at }}</p>
+    {% elif status == "already" %}
+        <h2>⚠️ Already Checked In!</h2>
+        <p>{{ attendee.name }} checked in at {{ attendee.checked_in_at }}</p>
+    {% else %}
+        <h2>❌ Invalid QR Code</h2>
+    {% endif %}
+    <br>
+    <a href="/">Back</a>
+</body>
+</html>
+

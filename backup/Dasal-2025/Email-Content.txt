@@ -1,0 +1,20 @@
+in app.py
+
+copy this - in main function at the end
+                    # Send email
+                    subject = "Maha Dasal 2025 Check-In QR Code"
+                    body = f"Namaskar {name},\n\nGovidhachaem Govindha! Please find your QR code attached for Maha Dasal 2025 Check-In.\nShow this QR code and inform your number of headcounts at the registration desk. Your RSVP headcount is {party_count}. \n\n 🚫Note: Devotees are kindly requested not to bring any food items, including sweets, to the Dasal. All food offerings will be provided by the designated host families for the event.\n\n Jhukku Dhannu 🙏🙏\n— Maha Dasal Team"
+                    send_email_qr(email, subject, body, qr_file)
+                    time.sleep(2)  # wait 1 second between sends
+
+def send_checkin_email(to_email, attendee_name):
+    msg = EmailMessage()
+    msg["Subject"] = "Maha Dasal 2025 Check-In Confirmation"
+    msg["From"] = SMTP_USER
+    msg["To"] = to_email
+    msg.set_content(
+        f"Dear {attendee_name},\n\n"
+        "We’ve successfully checked you in at Maha Dasal 2025.\n"
+        "Govidhachaem Govindha!\n\n"
+        "— Maha Dasal Team"
+    )

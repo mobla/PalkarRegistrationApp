@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maha Dasal 2025 QR Scanner</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Sanskrit Text", Georgia, serif;
+      background: linear-gradient(rgba(255, 218, 185, 0.85), rgba(255, 182, 193, 0.85)),
+                  url('/static/images/shiva-vishnu-temple.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #3b1f0d;
+      text-align: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 2rem 1rem;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-top: 12vh;
+      font-weight: bold;
+      color: #8b0000;
+      text-shadow: 2px 2px 5px #ffd700;
+    }
+
+    #reader {
+      width: 90%;
+      max-width: 500px;
+      margin: 2rem auto;
+      border: 6px solid #ffd700;
+      border-radius: 20px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    #result {
+      margin: 2rem auto;
+      padding: 1rem;
+      max-width: 500px;
+      border-radius: 15px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    #result.success {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    #result.error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    #result.info {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    nav {
+      margin: 2rem 0;
+    }
+
+    nav a {
+      margin: 0 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #8b0000;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      background: #ffd700;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    nav a:hover {
+      background: #ff8c00;
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #3b1f0d;
+    }
+
+    /* Flash overlay */
+    #flash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: transparent;
+      opacity: 0;
+      z-index: 9999;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    #flash.success {
+      background: rgba(0, 255, 0, 0.6);
+    }
+
+    #flash.error {
+      background: rgba(255, 0, 0, 0.6);
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+        margin-top: 8vh;
+      }
+      #reader {
+        width: 95%;
+      }
+      #result {
+        font-size: 1rem;
+      }
+    }
+  </style>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</head>
+<body>
+  <header>
+    <h1>🙏 Maha Dasal 2025 QR Code Scanner 🙏</h1>
+  </header>
+
+  <div id="reader"></div>
+  <div id="result" class="info">Scan a QR Code to check in</div>
+
+  <nav>
+    <a href="/">Home</a>
+    <a href="/admin">Admin</a>
+  </nav>
+
+  <footer>
+    <p>🌸 QR Scanner • Developed by Obla Family • With Blessings 🙏</p>
+  </footer>
+
+  <!-- Flash overlay -->
+  <div id="flash"></div>
+
+  <!-- Success and error sounds -->
+  <audio id="ding" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+  <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+  <script>
+      let scanner;
+
+      function startScanner() {
+          scanner = new Html5Qrcode("reader");
+          scanner.start(
+              { facingMode: "environment" },
+              { fps: 10, qrbox: 250 },
+              qrCodeMessage => {
+                  // Stop scanner immediately to prevent multiple triggers
+                  scanner.stop().then(() => {
+                      verifyQRCode(qrCodeMessage);
+                  }).catch(err => {
+                      console.error("Failed to stop scanner:", err);
+                  });
+              },
+              errorMessage => {
+                  // ignore scan errors
+              }
+          ).catch(err => {
+              console.error("Unable to start scanning:", err);
+          });
+      }
+
+      function verifyQRCode(qr_id) {
+          fetch(`/verify?qr_id=${qr_id}`)
+              .then(res => res.json())
+              .then(data => {
+                  alert(data.message); // Replace with popup UI
+                  // Restart scanner after closing alert
+                  startScanner();
+              })
+              .catch(err => console.error("Verify error:", err));
+      }
+
+      // Call this on page load
+      document.addEventListener("DOMContentLoaded", startScanner);
+  </script>
+</body>
+</html>

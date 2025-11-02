@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maha Dasal 2025 Registration Dashboard</title>
+  <style>
+    /* Background with temple vibe */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Sanskrit Text", Georgia, serif;
+      background: linear-gradient(rgba(255, 218, 185, 0.8), rgba(255, 182, 193, 0.8)),
+                  url('/static/images/shiva-vishnu-temple.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #3b1f0d;
+      text-align: center;
+    }
+
+    header {
+      padding: 2rem 1rem;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-top: 20vh;
+      font-weight: bold;
+      color: #8b0000;
+      text-shadow: 2px 2px 5px #ffd700;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+      margin: 0 auto;
+      max-width: 1000px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      padding: 1.5rem;
+      transition: transform 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-card h2 {
+      font-size: 1.4rem;
+      margin: 0 0 0.5rem 0;
+      font-weight: bold;
+      color: #d2691e;
+    }
+
+    .stat-card p {
+      font-size: 1.8rem;
+      margin: 0;
+      font-weight: bold;
+      color: #3b1f0d;
+    }
+
+    nav {
+      margin: 2rem 0;
+    }
+
+    nav a {
+      margin: 0 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #8b0000;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      background: #ffd700;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    nav a:hover {
+      background: #ff8c00;
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #3b1f0d;
+    }
+
+    /* 📱 Mobile-friendly table */
+    .table-container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      overflow-x: auto; /* keeps table scrollable on mobile */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ffd700;
+      color: #8b0000;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    /* 📱 Mobile-friendly table */
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+        margin-top: 10vh;
+      }
+      .stat-card p {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🙏 Maha Dasal 2025 Registration Dashboard 🙏</h1>
+  </header>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h2>Total Families</h2>
+      <p>{{ total_attendees }}</p>
+    </div>
+    <div class="stat-card">
+      <h2>Total Devotees</h2>
+      <p>{{ total_party_count }}</p>
+    </div>
+    <div class="stat-card">
+      <h2>Total Families Checked In</h2>
+      <p>{{ total_checked_in }}</p>
+    </div>
+    <div class="stat-card">
+      <h2>Checked In Devotees Count</h2>
+      <p>{{ checked_in_party_count }}</p>
+    </div>
+  </div>
+
+    <!-- ✅ Recent Check-ins -->
+  <div class="table-container">
+    <h2 style="color:#8b0000; margin-bottom:1rem;">Recent Check-ins</h2>
+    <table id="recent-checkins">
+      <thead>
+        <tr>
+          <th>Family Name</th>
+          <th>Party Count</th>
+          <th>Check-in Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attendee in recent_attendees %}
+        <tr>
+          <td>{{ attendee.name }}</td>
+          <td>{{ attendee.party_count }}</td>
+          <td>{{ attendee.checked_in_at.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="4">No check-ins yet</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <nav>
+    <a href="/">Home</a>
+    <a href="/admin">Admin</a>
+  </nav>
+
+  <footer>
+    <p>🌸 Developed by Obla Family • With Blessings 🙏</p>
+  </footer>
+
+<script>
+async function refreshRecentCheckins() {
+  try {
+    const response = await fetch("/recent_checkins");
+    if (!response.ok) return;
+    const data = await response.json();
+
+    const tbody = document.querySelector("#recent-checkins tbody");
+    tbody.innerHTML = "";
+
+    if (data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4">No check-ins yet</td></tr>`;
+    } else {
+      data.forEach(attendee => {
+        const row = `
+          <tr>
+            <td>${attendee.name}</td>
+            <td>${attendee.party_count}</td>
+            <td>${attendee.checked_in_at}</td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+    }
+  } catch (err) {
+    console.error("Failed to refresh check-ins:", err);
+  }
+}
+
+// Initial load + refresh every 15s
+refreshRecentCheckins();
+setInterval(refreshRecentCheckins, 15000);
+</script>
+
+</body>
+</html>

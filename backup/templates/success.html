@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Successful</title>
+</head>
+<body>
+    <h2>Thank you {{ attendee.name }}!</h2>
+    <p>Your QR code:</p>
+    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code"><br><br>
+    <a href="/">Back</a>
+</body>
+</html>

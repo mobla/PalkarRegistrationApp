@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h2>Admin - Attendee List</h2>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>QR ID</th>
+            <th>Status</th>
+        </tr>
+        {% for a in attendees %}
+        <tr>
+            <td>{{ a.name }}</td>
+            <td>{{ a.email }}</td>
+            <td>{{ a.qr_id }}</td>
+            <td>
+                {% if a.checked_in_at %}
+                    ✅ Checked in at {{ a.checked_in_at }}
+                {% else %}
+                    ⏳ Not checked in
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/">Back to Registration</a>
+</body>
+</html>
+

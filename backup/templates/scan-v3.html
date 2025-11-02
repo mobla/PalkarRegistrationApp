@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Scanner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        body {
+            font-family: 'Noto Serif Devanagari', serif;
+            margin: 0;
+            padding: 0;
+            background: url("/static/bg.jpg") no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+        .overlay {
+            background: rgba(255, 255, 255, 0.6);
+            min-height: 100vh;
+            text-align: center;
+            padding-top: 15vh;
+        }
+        h1 {
+            font-family: 'Noto Serif Devanagari', serif;
+            margin-bottom: 30px;
+        }
+        #qr-reader {
+            width: 300px;
+            margin: auto;
+        }
+        .back-link {
+            margin-top: 30px;
+            display: inline-block;
+        }
+        a {
+            color: #ff4500;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <h1>Scan QR Code</h1>
+        <div id="qr-reader"></div>
+        <div class="back-link">
+            <a href="/admin">Back to Admin</a>
+        </div>
+    </div>
+
+    <script>
+        let html5QrcodeScanner = new Html5Qrcode("qr-reader");
+
+        function startScanner() {
+            html5QrcodeScanner.start(
+                { facingMode: "environment" }, // use back camera on mobile
+                {
+                    fps: 10,
+                    qrbox: 250
+                },
+                qrCodeMessage => {
+                    // Stop the scanner immediately
+                    html5QrcodeScanner.stop().then(() => {
+                        alert("QR Scanned: " + qrCodeMessage);
+
+                        // Send QR code to verify API
+                        fetch(`/verify_qr/${encodeURIComponent(qrCodeMessage)}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                if(data.success){
+                                    alert(`Registration verified for ${data.name}`);
+                                } else {
+                                    alert("QR verification failed: " + data.message);
+                                }
+                            })
+                            .catch(err => console.error("Error verifying QR:", err));
+                    }).catch(err => console.error("Failed to stop scanner:", err));
+                },
+                errorMessage => {
+                    // Optional: console.log("QR scan error:", errorMessage);
+                }
+            ).catch(err => console.error("Unable to start scanner:", err));
+        }
+
+        // Start scanner once
+        startScanner();
+    </script>
+</body>
+</html>

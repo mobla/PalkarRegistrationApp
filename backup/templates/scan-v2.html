@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code Scanner</title>
+    <!-- Load local html5-qrcode library -->
+    <script src="{{ url_for('static', filename='js/html5-qrcode.min.js') }}"></script>
+</head>
+<body>
+<h2>Scan Attendee QR Code</h2>
+
+<!-- Camera scanner container -->
+<div id="qr-reader" style="width:500px;"></div>
+
+<!-- Scan result -->
+<div id="result"></div>
+
+<!-- Manual input fallback -->
+<h3>Or enter QR ID manually:</h3>
+<input type="text" id="manual-qr" placeholder="Paste QR code">
+<button onclick="verifyManual()">Verify</button>
+
+<script>
+function onScanSuccess(decodedText) {
+    html5QrcodeScanner.clear().catch(console.error);
+
+    fetch(`/verify_api/${decodedText}`)
+        .then(res => res.json())
+        .then(data => {
+            const resultDiv = document.getElementById("result");
+            if(data.status === "valid")
+                resultDiv.innerHTML = `✅ ${data.name} checked in at ${data.checked_in_at}`;
+            else if(data.status === "already")
+                resultDiv.innerHTML = `⚠️ ${data.name} already checked in at ${data.checked_in_at}`;
+            else
+                resultDiv.innerHTML = `❌ Invalid QR Code`;
+        });
+}
+
+// Initialize QR scanner
+//let html5QrcodeScanner = new Html5Qrcode("qr-reader");
+
+//html5QrcodeScanner.start(
+//    { facingMode: "user" },  // front camera for MacBook
+//    { fps: 10, qrbox: 400 }
+//).then(() => {
+//    console.log("Camera started successfully");
+//}).catch(err => {
+//    console.warn("Camera could not be accessed, fallback to manual input:", err);
+//    document.getElementById("qr-reader").style.display = "none";
+//});
+
+// Initialize scanner
+let html5QrcodeScanner = new Html5Qrcode("qr-reader");
+html5QrcodeScanner.start(
+    { facingMode: "environment" }, // rear camera
+    {
+        fps: 10,    // scan rate
+        qrbox: 250
+    },
+    onScanSuccess
+);
+
+// Manual input verification
+function verifyManual() {
+    const qrText = document.getElementById("manual-qr").value.trim();
+    if (!qrText) return alert("Enter QR ID");
+
+    fetch(`/verify_api/${qrText}`)
+        .then(res => res.json())
+        .then(data => {
+            const resultDiv = document.getElementById("result");
+            if(data.status === "valid")
+                resultDiv.innerHTML = `✅ ${data.name} checked in at ${data.checked_in_at}`;
+            else if(data.status === "already")
+                resultDiv.innerHTML = `⚠️ ${data.name} already checked in at ${data.checked_in_at}`;
+            else
+                resultDiv.innerHTML = `❌ Invalid QR Code`;
+        });
+}
+</script>
+
+<br>
+<a href="/">Back to Registration</a>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Sanskrit Text", Georgia, serif;
+      background: linear-gradient(rgba(255, 218, 185, 0.9), rgba(255, 182, 193, 0.9)),
+                  url('/static/images/shiva-vishnu-temple.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #3b1f0d;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 2rem 1rem;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-top: 12vh;
+      font-weight: bold;
+      color: #8b0000;
+      text-shadow: 2px 2px 5px #ffd700;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 2rem auto;
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      flex: 1 1 200px;
+      max-width: 250px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 3px solid #ffd700;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    .stat-card h2 {
+      font-size: 2rem;
+      margin: 0;
+      color: #8b0000;
+      font-weight: bold;
+    }
+
+    .stat-card p {
+      margin: 0.5rem 0 0;
+      font-size: 1.1rem;
+    }
+
+    .recent-checkins {
+      margin: 2rem auto;
+      max-width: 90%;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem;
+      border-radius: 12px;
+      border: 2px solid #ffd700;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      overflow-x: auto;
+    }
+
+    .recent-checkins h2 {
+      color: #8b0000;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    table th, table td {
+      padding: 0.6rem;
+      border: 1px solid #ddd;
+    }
+
+    table th {
+      background: #ffd700;
+      color: #8b0000;
+      font-weight: bold;
+    }
+
+    table tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    nav {
+      margin: 2rem 0;
+    }
+
+    nav a {
+      margin: 0 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #8b0000;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      background: #ffd700;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    nav a:hover {
+      background: #ff8c00;
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #3b1f0d;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+        margin-top: 8vh;
+      }
+      .stats {
+        flex-direction: column;
+        align-items: center;
+      }
+      table {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🙏 Maha Dhasal 2025 Registration Dashboard 🙏</h1>
+  </header>
+
+  <section class="stats" id="stats-section">
+    <div class="stat-card">
+      <h2 id="total-attendees">{{ total_attendees }}</h2>
+      <p>Registered Families</p>
+    </div>
+    <div class="stat-card">
+      <h2 id="checked-in">{{ total_checked_in }}</h2>
+      <p>Checked-in</p>
+    </div>
+    <div class="stat-card">
+      <h2 id="pending">{{ total_pending }}</h2>
+      <p>Pending</p>
+    </div>
+    <div class="stat-card">
+      <h2 id="total-party">{{ total_party_count }}</h2>
+      <p>Total Devotees</p>
+    </div>
+  </section>
+
+  <!-- NEW Recent Check-ins Section -->
+  <section class="recent-checkins">
+    <h2>📝 Recent Check-ins</h2>
+    <table id="recent-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Devotee Count</th>
+          <th>Check-in Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attendee in recent_attendees %}
+        <tr>
+          <td>{{ attendee.name }}</td>
+          <td>{{ attendee.email }}</td>
+          <td>{{ attendee.party_count or "-" }}</td>
+          <td>{{ attendee.checked_in_at or "-" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <nav>
+    <a href="/">Home</a>
+    <a href="/admin">Admin</a>
+  </nav>
+
+  <footer>
+    <p>🌸 Powered by Obla Family • With Blessings 🙏</p>
+  </footer>
+
+  <script>
+    async function refreshRecentCheckins() {
+      try {
+        const response = await fetch("/api/recent-checkins");
+        const data = await response.json();
+
+        const tbody = document.querySelector("#recent-table tbody");
+        tbody.innerHTML = "";
+        data.recent_attendees.forEach(att => {
+          const row = `<tr>
+            <td>${att.name}</td>
+            <td>${att.email}</td>
+            <td>${att.party_count || "-"}</td>
+            <td>${att.checked_in_at || "-"}</td>
+          </tr>`;
+          tbody.innerHTML += row;
+        });
+      } catch (err) {
+        console.error("Failed to refresh checkins:", err);
+      }
+    }
+
+    // Auto-refresh only recent checkins every 10 seconds
+    setInterval(refreshRecentCheckins, 10000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <style>
+        .recent { background-color: #d4edda; } /* light green for recent check-ins */
+    </style>
+    <script>
+        let lastCheckinTimes = {};
+
+        function fetchAttendees() {
+            fetch("/admin_api")
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById("attendee-body");
+                    tableBody.innerHTML = "";
+
+                    data.attendees.forEach(a => {
+                        let recentClass = "";
+                        if(a.checked_in_at) {
+                            const lastTime = lastCheckinTimes[a.qr_id];
+                            const checkinTime = new Date(a.checked_in_at).getTime();
+                            const now = new Date().getTime();
+                            // Highlight if checked-in within last 10 seconds
+                            if(!lastTime || (now - checkinTime < 10000)) {
+                                recentClass = "recent";
+                                lastCheckinTimes[a.qr_id] = checkinTime;
+                            }
+                        }
+
+                        let statusText = a.checked_in_at ? `✅ ${a.checked_in_at}` : "⏳ Not checked in";
+                        let row = `<tr class="${recentClass}">
+                            <td>${a.name}</td>
+                            <td>${a.email}</td>
+                            <td>${a.qr_id}</td>
+                            <td>${statusText}</td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                });
+        }
+
+        setInterval(fetchAttendees, 3000); // refresh every 3 seconds
+        window.onload = fetchAttendees;
+    </script>
+</head>
+<body>
+<h2>Admin Panel - Live Check-ins</h2>
+<table border="1" cellpadding="5">
+<tr>
+<th>Name</th><th>Email</th><th>QR ID</th><th>Status</th>
+</tr>
+<tbody id="attendee-body">
+<!-- Populated via JS -->
+</tbody>
+</table>
+<br>
+<a href="/">Back to Dashboard</a>
+</body>
+</html>

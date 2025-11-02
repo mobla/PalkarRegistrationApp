@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Attendees</title>
+    <!-- Google Fonts: Sanskrit-style -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Serif Devanagari', serif;
+            margin: 0;
+            padding: 0;
+            background: url("/static/md.png") no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+        .overlay {
+            background: rgba(255, 255, 255, 0.6);
+            min-height: 100vh;
+            text-align: center;
+            padding-bottom: 40px;
+        }
+        .container {
+            padding-top: 20vh;
+        }
+        h1 {
+            font-family: 'Noto Serif Devanagari', serif;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            display: inline-block;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ffdd99, #ff9966);
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+            min-width: 200px;
+            color: #333;
+        }
+        .number { font-size: 2em; font-weight: bold; }
+        .label { font-size: 1.2em; color: #222; font-weight: bold; }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+            background: #fff8e1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #ffcc80;
+            font-weight: bold;
+            color: #333;
+        }
+        tbody tr:nth-child(even) { background-color: #fff3e0; }
+        tbody tr:nth-child(odd) { background-color: #ffe0b2; }
+        a {
+            color: #ff4500;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link {
+            margin-top: 30px;
+            display: inline-block;
+        }
+        /* QR Scan button */
+        .qr-btn {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 12px 25px;
+            background: #ff5722;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0px 3px 6px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+        .qr-btn:hover {
+            background: #e64a19;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="container">
+            <h1>Admin - Attendees</h1>
+
+            <!-- Optional Stats Boxes -->
+            <div id="stats">
+                <div class="stat-box">
+                    <div class="number" id="total">{{ total_attendees }}</div>
+                    <div class="label">Total Families</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="totalparty">{{ total_party_count }}</div>
+                    <div class="label">Total Attendees</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="checked">{{ checked_in_count }}</div>
+                    <div class="label">Checked In</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="remaining">{{ total_attendees - checked_in_count }}</div>
+                    <div class="label">Not Yet Checked In</div>
+                </div>
+            </div>
+
+            <!-- QR Scan Button
+            <a href="/scan" class="qr-btn">Scan QR Code</a>-->
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name/Family</th>
+                        <th>Email</th>
+                        <th>RSVP Headcount</th>
+                        <th>Checked In At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendee in attendees %}
+                    <tr>
+                        <td>{{ attendee.name }}</td>
+                        <td>{{ attendee.email }}</td>
+                        <td>{{ attendee.party_count }}</td>
+                        <td>{{ attendee.checked_in_at or "-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="back-link">
+                <a href="/">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function refreshStats() {
+            try {
+                const res = await fetch("/stats");
+                const data = await res.json();
+                document.getElementById("total").textContent = data.total_attendees;
+                document.getElementById("totalparty").textContent = data.total_party_counts;
+                document.getElementById("checked").textContent = data.checked_in_count;
+                document.getElementById("remaining").textContent = data.total_attendees - data.checked_in_count;
+            } catch (err) {
+                console.error("Error refreshing stats", err);
+            }
+        }
+
+        refreshStats();
+        setInterval(refreshStats, 10000);
+    </script>
+</body>
+</html>

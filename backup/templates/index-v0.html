@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maha Dhasal 2025 Registration and Check-in</title>
+</head>
+<body>
+    <!--
+    <h2>Register for Event</h2>
+    <form action="/register" method="post">
+        <label>Name:</label><br>
+        <input type="text" name="name" required><br><br>
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br><br>
+        <button type="submit">Register</button>
+    </form>-->
+
+    <h3>Maha Dhasal 2025 Registered Attendees</h3>
+    <ul>
+        {% for a in attendees %}
+            <li>{{ a.name }} - {{ a.email }} - {{ a.headcount }} {% if a.checked_in_at %}(✅ Checked in){% endif %}</li>
+        {% endfor %}
+    </ul>
+    <br>
+    <a href="/admin">Maha Dhasal Admin Panel</a>
+</body>
+</html>
+

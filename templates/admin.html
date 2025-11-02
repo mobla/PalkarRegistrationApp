@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bay Area Diwali 2025 Admin Dashboard</title>
+  <!-- 🌸 Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* 🌸 Diwali Background */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Quicksand", sans-serif;
+      background: linear-gradient(rgba(255, 200, 150, 0.5), rgba(255, 170, 120, 0.5)),
+                  url('/static/images/diwali-7.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #3b1f0d;
+      text-align: center;
+    }
+
+    header {
+      padding: 2rem 1rem;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-top: 12vh;
+      font-weight: bold;
+      color: #8b0000;
+      text-shadow: 2px 2px 5px #ffd700;
+      text-align: center;
+    }
+
+    /* ✨ Stats Cards */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+      margin: 0 auto;
+      max-width: 1000px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #fff1d6, #ffe5b4);
+      border-radius: 20px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25), 0 0 15px #ffcc00;
+      padding: 1.5rem;
+      transition: transform 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-6px) scale(1.03);
+    }
+
+    .stat-card h2 {
+      font-size: 1.2rem;
+      margin: 0 0 0.5rem 0;
+      font-weight: 600;
+      color: #8b0000;
+    }
+
+    .stat-card p {
+      font-size: 1.7rem;
+      margin: 0;
+      font-weight: 700;
+      color: #3b1f0d;
+    }
+
+    /* 📊 Admin Table */
+    table {
+      width: 95%;
+      margin: 2rem auto;
+      border-collapse: collapse;
+      background: linear-gradient(135deg, #fff1d6, #ffe5b4);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.3), 0 0 20px #ffcc00;
+      color: #3b1f0d; /* dark text for readability */
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 0.8rem;
+      font-size: 1rem;
+      text-align: center;
+      color: #3b1f0d; /* ensure all cells have dark text */
+    }
+
+    table th {
+      background: linear-gradient(135deg, #ffd700, #ffa500);
+      color: #8b0000; /* dark red for header text */
+      font-weight: 700;
+      text-shadow: 1px 1px #fff8dc;
+    }  
+
+    table tr:nth-child(even) {
+      background-color: #fffaf0;
+    }
+
+    table tr:hover {
+      background-color: #fff3d6;
+    }
+
+  th {
+  cursor: pointer;
+  transition: background 0.3s;
+}
+th.sorted {
+  background: linear-gradient(135deg, #ffe066, #ffb347);
+  color: #800000;
+}
+  
+    /* 🪔 Navigation Buttons */
+    nav {
+      margin: 2rem 0;
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+    }
+
+    nav a {
+      display: inline-block;
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      color: #4b0000;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25), 0 0 12px #ffcc00;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    nav a:hover {
+      background: linear-gradient(135deg, #ffcc33, #ff6600);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35), 0 0 18px #ff9900;
+      color: #4b0000;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #3b1f0d;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+        margin-top: 8vh;
+      }
+      table th, table td {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+      }
+      .stat-card p {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🪔✨ Bay Area Diwali 2025 Admin Dashboard ✨🪔</h1>
+  </header>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h2>Families Registered</h2>
+      <p>{{ total_attendees }}</p>
+    </div>
+    <div class="stat-card">
+      <h2>Total Headcount</h2>
+      <p>{{ total_party_count }}</p>
+    </div>
+    <div class="stat-card">
+      <h2>Families Checked In</h2>
+      <p>{{ checked_in_count }}</p>
+    </div>
+    <div class="stat-card">
+      <h2>Headcount Checked In</h2>
+      <p>{{ checked_in_party_count }}</p>
+    </div>
+  </div>
+
+  <table id="attendees-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Registered Headcount</th>
+        <th>Check-in Headcount</th>
+        <th>Checked In At</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for attendee in attendees %}
+      <tr>
+        <td>{{ attendee.name }}</td>
+        <td>{{ attendee.email }}</td>
+        <td>{{ attendee.party_count }}</td>
+        <td>{{ attendee.checked_in_party_count }}</td>
+        <td>
+          {% if attendee.checked_in_at %}
+            ✅ {{ attendee.checked_in_at.strftime('%Y-%m-%d %H:%M:%S') }}
+          {% else %}
+            ❌ Not yet
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <nav>
+    <a href="/">🏠 Home</a>
+  </nav>
+
+  <footer>
+    <p>🌸 Admin Panel • Developed by Obla Family • With Blessings 🙏</p>
+  </footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const getCellValue = (row, index) => row.children[index].innerText.trim();
+
+  const comparer = (index, asc) => (a, b) => {
+    const valA = getCellValue(asc ? a : b, index);
+    const valB = getCellValue(asc ? b : a, index);
+    return isNaN(valA) || isNaN(valB)
+      ? valA.localeCompare(valB)
+      : valA - valB;
+  };
+
+  document.querySelectorAll("th").forEach((th) =>
+    th.addEventListener("click", () => {
+      const table = th.closest("table");
+      Array.from(table.querySelectorAll("tr:nth-child(n+2)"))
+        .sort(comparer(Array.from(th.parentNode.children).indexOf(th), (th.asc = !th.asc)))
+        .forEach((tr) => table.appendChild(tr));
+
+      // Optional visual cue (highlight sorted column)
+      document.querySelectorAll("th").forEach((header) => header.classList.remove("sorted"));
+      th.classList.add("sorted");
+    })
+  );
+});
+</script>
+
+</body>
+</html>

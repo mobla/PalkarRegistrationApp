@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Camera Test</title>
+</head>
+<body>
+<h2>Camera Test</h2>
+<video id="video" width="400" autoplay></video>
+<script>
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+    document.getElementById('video').srcObject = stream;
+})
+.catch(err => {
+    alert("Camera access failed: " + err);
+    console.error(err);
+});
+</script>
+</body>
+</html>
+

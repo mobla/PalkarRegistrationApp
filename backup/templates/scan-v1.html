@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code Scanner</title>
+    <!--<script src="https://unpkg.com/html5-qrcode@2.3.7/minified/html5-qrcode.min.js"></script>-->
+    <!-- Load locally served script -->
+    <script src="{{ url_for('static', filename='js/html5-qrcode.min.js') }}"></script>
+</head>
+<body>
+<h2>Scan Attendee QR Code</h2>
+
+<div id="qr-reader" style="width:500px;"></div>
+<div id="result"></div>
+
+<h3>Or enter QR ID manually:</h3>
+<input type="text" id="manual-qr" placeholder="Paste QR code">
+<button onclick="verifyManual()">Verify</button>
+
+<script>
+function onScanSuccess(decodedText, decodedResult) {
+    // Stop scanning
+    html5QrcodeScanner.clear().then(_ => console.log("QR scan stopped")).catch(console.error);
+
+    // Send QR ID to verify endpoint
+    fetch(`/verify_api/${decodedText}`)
+    .then(response => response.json())
+    .then(data => {
+        let resultDiv = document.getElementById("result");
+        if(data.status === "valid") {
+            resultDiv.innerHTML = `✅ ${data.name} checked in at ${data.checked_in_at}`;
+        } else if(data.status === "already") {
+            resultDiv.innerHTML = `⚠️ ${data.name} already checked in at ${data.checked_in_at}`;
+        } else {
+            resultDiv.innerHTML = `❌ Invalid QR Code`;
+        }
+    });
+}
+
+// Initialize camera scanner
+let html5QrcodeScanner = new Html5Qrcode("qr-reader");
+html5QrcodeScanner.start(
+    { facingMode: "user" },
+    { fps: 10, qrbox: 250 },
+    decodedText => { console.log("QR detected:", decodedText); },
+    errorMessage => { console.log("QR scan error:", errorMessage); }
+).catch(err => { console.error("Camera start failed:", err); });
+
+// Manual input verification
+function verifyManual() {
+    const qrText = document.getElementById("manual-qr").value.trim();
+    if (!qrText) return alert("Enter QR ID");
+    fetch(`/verify_api/${qrText}`)
+        .then(res => res.json())
+        .then(data => {
+            let resultDiv = document.getElementById("result");
+            if(data.status === "valid")
+                resultDiv.innerHTML = `✅ ${data.name} checked in at ${data.checked_in_at}`;
+            else if(data.status === "already")
+                resultDiv.innerHTML = `⚠️ ${data.name} already checked in at ${data.checked_in_at}`;
+            else
+                resultDiv.innerHTML = `❌ Invalid QR Code`;
+        });
+}
+</script>
+
+<br>
+<a href="/">Back to Registration</a>
+</body>
+</html>

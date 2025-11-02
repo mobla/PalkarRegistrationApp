@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maha Dhasal 2025 Registration Dashboard</title>
+    <!-- Google Fonts: Sanskrit-style -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Serif Devanagari', serif;
+            margin: 0;
+            padding: 0;
+            background: url("/static/md.png") no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+        .overlay {
+            background: rgba(255, 255, 255, 0.1);
+            min-height: 100vh;
+            text-align: center;
+        }
+        .container {
+            padding-top: 42vh; /* Push content down */
+        }
+        h1, h2 {
+            font-family: 'Noto Serif Devanagari', serif;
+        }
+        .stat-box {
+            display: inline-block;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ffdd99, #ff9966); /* colorful gradient */
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+            min-width: 200px;
+            color: #333;
+        }
+        .number { font-size: 2em; font-weight: bold; }
+        .label { font-size: 1.2em; color: #222; font-weight: bold; }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 70%;
+            background: #fff8e1; /* light pastel for contrast */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #ffcc80; /* vibrant header color */
+            font-weight: bold;
+            color: #333;
+        }
+        tbody tr:nth-child(even) { background-color: #fff3e0; } /* alternate row colors */
+        tbody tr:nth-child(odd) { background-color: #ffe0b2; }
+        a {
+            color: #ff4500;  /* vibrant orange/red */
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="container">
+            <h1>Maha Dhasal 2025 Registration Dashboard</h1>
+
+            <div id="stats">
+                <div class="stat-box">
+                    <div class="number" id="total">{{ total_attendees }}</div>
+                    <div class="label">Total Families</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="number" id="totalparty">{{ total_party_count }}</div>
+                    <div class="label">Total Attendees</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="number" id="checked">{{ checked_in_count }}</div>
+                    <div class="label">Checked In</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="number" id="remaining">{{ total_attendees - checked_in_count }}</div>
+                    <div class="label">Not Yet Checked In</div>
+                </div>
+            </div>
+
+            <h2>Recently Checked In</h2>
+            <table>
+                <thead>
+                    <tr><th>Name/Family</th><th>Email</th><th>RSVP HeadCount</th><th>Checked In At</th></tr>
+                </thead>
+                <tbody id="recent-checkins">
+                    <!-- Filled dynamically -->
+                </tbody>
+            </table>
+
+            <p style="margin-top: 40px;">
+                <a href="/admin">View Attendees</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        async function refreshStats() {
+            try {
+                const res = await fetch("/stats");
+                const data = await res.json();
+                document.getElementById("total").textContent = data.total_attendees;
+                document.getElementById("totalparty").textContent = data.total_party_count;
+                document.getElementById("checked").textContent = data.checked_in_count;
+                document.getElementById("remaining").textContent = data.total_attendees - data.checked_in_count;
+
+                let tbody = document.getElementById("recent-checkins");
+                tbody.innerHTML = "";
+                data.recent_checkins.forEach(a => {
+                    let row = `<tr>
+                        <td>${a.name}</td>
+                        <td>${a.email}</td>
+                        <td>${a.party_count}</td>
+                        <td>${a.checked_in_at}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            } catch (err) {
+                console.error("Error refreshing stats", err);
+            }
+        }
+
+        // Initial load + refresh every 10s
+        refreshStats();
+        setInterval(refreshStats, 10000);
+    </script>
+</body>
+</html>

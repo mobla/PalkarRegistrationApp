@@ -1,0 +1,2 @@
+﻿id,name,email,registration_date,adults,children_6_12,children_under_5,total_people,vegetarians,non_vegetarians,Food Preferences,idly_boxes,idiyappam_boxes,total_amount,payment_status,Paid Tickets
+47,John Annachi,Annachikadaipleasanton@gmail.com,2025-10-18 14:29:15,1,0,0,1,0,1,1 Non-Vegetarian,0,0,FALSE,No,FALSE,0,manual,,1
