@@ -4,3 +4,5 @@ Flask-Mail==0.10.0
 qrcode==7.4.2
 pillow==10.4.0
 reportlab>=4.0.0
+gunicorn==21.2.0
+psycopg2-binary==2.9.9

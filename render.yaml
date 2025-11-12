@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: palkar-registration-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.18
+      - key: SECRET_KEY
+        generateValue: true
+    plan: free
+

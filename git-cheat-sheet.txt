@@ -1,0 +1,88 @@
+Perfect — you’ve already created a remote repo on GitHub, and you have a local folder with code on your Mac.
+Now you just need to connect them and push your files.
+
+Here’s the exact step-by-step guide 👇
+
+🧭 Step 1: Open Terminal and go to your project folder
+
+cd /path/to/your/project
+cd ~/Documents/myproject
+
+🧱 Step 2: Initialize Git in that folder (if not already)
+git init
+✅ This creates a local .git folder to track your files.
+
+🗂️ Step 3: Add your files to Git
+git add .
+
+📝 Step 4: Commit the files
+git commit -m "Initial commit"
+
+🌐 Step 5: Connect your local folder to the GitHub repo
+Find your GitHub repo URL — it looks like:
+
+HTTPS → https://github.com/<username>/<repo>.git
+
+or SSH → git@github.com:<username>/<repo>.git
+
+Then run:git remote add origin https://github.com/<username>/<repo>.git
+
+🚀 Step 6: Push your code to GitHub
+If your GitHub repo is empty, run:
+git branch -M main
+git push -u origin main
+If the repo already has files (like a README):
+git pull origin main --rebase
+git push -u origin main
+
+✅ Done!
+You can now open your GitHub repo page — your files should appear there.
+
+
+GitHub no longer supports password authentication for git push or git pull.
+
+You need to use either a Personal Access Token (PAT) or SSH keys instead of your password.
+
+Here’s how to fix it step-by-step using either method 👇
+Option 1 — Use a Personal Access Token (recommended & easiest)
+🪄 Step 1. Create a GitHub Personal Access Token
+
+Go to 👉 https://github.com/settings/tokens
+Click “Tokens (classic)” → “Generate new token (classic)”
+Give it a name (e.g. Mac Git Push Token)
+Select scopes:
+
+✅ repo (for full access to your repositories)
+Click Generate token
+Copy the token (you’ll only see it once!)
+
+Step 2. Use it when pushing
+
+When Git asks for:
+Username for 'https://github.com': 
+Enter your GitHub username (not email)
+When it asks for:
+Password for 'https://github.com':
+👉 Paste your Personal Access Token (not your password)
+
+💡 Step 3 (optional). Save credentials so you don’t enter it every time
+git config --global credential.helper store
+Then push once:
+git push -u origin main
+It’ll save your token locally in ~/.git-credentials.
+
+🔑 Option 2 — Use SSH (recommended for frequent Git users)
+If you prefer SSH, here’s the quick setup:
+# Generate a new key (press Enter for defaults)
+ssh-keygen -t ed25519 -C "muraliobla@yahoo.com"
+
+# Copy your public key
+cat ~/.ssh/id_ed25519.pub
+
+Copy the printed key
+Go to GitHub → Settings → SSH and GPG keys → New SSH key
+Paste it and save
+Then tell Git to use SSH:git remote set-url origin git@github.com:mobla/PalkarRegistrationApp.git
+
+git push -u origin main
+✅ It should work without asking for credentials anymore.

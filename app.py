@@ -23,7 +23,23 @@ from utils.pdf_utils import generate_attendee_list
 
 # --- Flask & DB setup ---
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///diwali-attendees.db'
+
+# Database configuration - use environment variable if available (for Render/PostgreSQL)
+# Otherwise use SQLite for local development
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    # Render provides postgres:// but SQLAlchemy needs postgresql://
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    # Local development with SQLite
+    instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance')
+    os.makedirs(instance_path, exist_ok=True)
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(instance_path, "diwali-attendees.db")}'
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
 db = SQLAlchemy(app)
 
 class Attendee(db.Model):
@@ -42,13 +58,10 @@ QR_FOLDER = "static/qr_codes"
 os.makedirs(QR_FOLDER, exist_ok=True)
 
 # --- SMTP settings ---
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-#SMTP_USER = "mahadhasal@gmail.com"
-#SMTP_PASSWORD = "hxse kxxr gadw gxfh"
-
-SMTP_USER = "palkardiwali@gmail.com"
-SMTP_PASSWORD = "hxse kxxr gadw gxfh"
+SMTP_SERVER = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
+SMTP_PORT = int(os.environ.get('SMTP_PORT', 587))
+SMTP_USER = os.environ.get('SMTP_USER', 'palkardiwali@gmail.com')
+SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', '')
 
 
 # --- Functions ---
@@ -407,39 +420,52 @@ def download_attendee_list():
 
 # --- MAIN: all DB access inside app context ---s
 if __name__ == "__main__":
-    if not os.path.exists("diwali-attendees.db"):
+    # Initialize database if it doesn't exist (for SQLite only)
+    if not database_url:
+        db_path = os.path.join(instance_path, "diwali-attendees.db")
+        if not os.path.exists(db_path):
+            with app.app_context():
+                db.create_all()  # create tables if not exists
+                # Only load CSV if file exists
+                csv_path = "diwali-attendees.csv"
+                if os.path.exists(csv_path):
+                    with open(csv_path, newline='', encoding='utf-8') as csvfile:
+                        reader = csv.reader(csvfile)
+                        headers = [h.strip().lower() for h in next(reader)]
+                        name_idx = headers.index("name")
+                        email_idx = headers.index("email")
+                        party_idx = headers.index("total_people") if "total_people" in headers else None
+
+                        for row in reader:
+                            name = row[name_idx].strip()
+                            email = row[email_idx].strip()
+                            party_count = int(row[party_idx].strip()) if row[party_idx].strip() else 1
+
+                            # Skip if already exists
+                            if Attendee.query.filter_by(email=email).first():
+                                print(f"{email} already exists in db, skipping...")
+                                continue
+
+                            # Generate QR
+                            qr_id = str(uuid.uuid4())
+                            qr_file = os.path.join(QR_FOLDER, f"{qr_id}.png")
+                            generate_qr(qr_id, qr_file)
+
+                            # Save to DB
+                            attendee = Attendee(name=name, email=email, party_count=party_count, qr_id=qr_id)
+                            db.session.add(attendee)
+                            db.session.commit()
+
+                            # Send email
+                            subject = "Diwali 2025 Check-In QR Code"
+                            body = f"Namaskar {name}, \nHappy Diwali! \nPlease find your QR code attached for Diwali 2025 Check-In.\n\nKindly show this QR code and inform your number of headcounts at the registration desk. Your registered headcount is {party_count}. Enjoy the event! \n\n— Dhannu🙏🙏, \n2025 Diwali Team"
+                            send_email_qr(email, subject, body, qr_file)
+                            time.sleep(2)  # wait 1 second between sends
+    else:
+        # For PostgreSQL or if database already exists, just ensure tables exist
         with app.app_context():
-            db.create_all()  # create tables if not exists
-            with open("diwali-attendees.csv", newline='', encoding='utf-8') as csvfile:
-                reader = csv.reader(csvfile)
-                headers = [h.strip().lower() for h in next(reader)]
-                name_idx = headers.index("name")
-                email_idx = headers.index("email")
-                party_idx = headers.index("total_people") if "total_people" in headers else None
-
-                for row in reader:
-                    name = row[name_idx].strip()
-                    email = row[email_idx].strip()
-                    party_count = int(row[party_idx].strip()) if row[party_idx].strip() else 1
-
-                    # Skip if already exists
-                    if Attendee.query.filter_by(email=email).first():
-                        print(f"{email} already exists in db, skipping...")
-                        continue
-
-                    # Generate QR
-                    qr_id = str(uuid.uuid4())
-                    qr_file = os.path.join(QR_FOLDER, f"{qr_id}.png")
-                    generate_qr(qr_id, qr_file)
-
-                    # Save to DB
-                    attendee = Attendee(name=name, email=email, party_count=party_count, qr_id=qr_id)
-                    db.session.add(attendee)
-                    db.session.commit()
-
-                    # Send email
-                    subject = "Diwali 2025 Check-In QR Code"
-                    body = f"Namaskar {name}, \nHappy Diwali! \nPlease find your QR code attached for Diwali 2025 Check-In.\n\nKindly show this QR code and inform your number of headcounts at the registration desk. Your registered headcount is {party_count}. Enjoy the event! \n\n— Dhannu🙏🙏, \n2025 Diwali Team"
-                    send_email_qr(email, subject, body, qr_file)
-                    time.sleep(2)  # wait 1 second between sends
-    app.run(host="0.0.0.0", port=5000, debug=False)
+            db.create_all()
+    
+    # Get port from environment variable (Render sets this automatically)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
