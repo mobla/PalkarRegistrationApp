@@ -3,153 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bay Area Diwali 2025 QR Scanner</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Bay Area Diwali QR Scanner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    :root { color-scheme: light; --burgundy: #4A0E17; --amber: #D97706; --ivory: #FFFDF9; --slate: #1F2937; --muted: #6B7280; --line: #E9E2D9; --surface: rgba(255,255,255,.82); --shadow: 0 10px 25px -5px rgba(31,41,55,.10); }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      padding: 0;
-      font-family: "Quicksand", sans-serif;
-      background: linear-gradient(rgba(255, 200, 150, 0.5), rgba(255, 170, 120, 0.5)),
-                  url('/static/images/diwali-7.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff8dc;
-      text-align: center;
-      overflow-x: hidden;
+      min-height: 100vh;
+      padding: 22px 16px;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      color: var(--slate);
+      background: radial-gradient(ellipse at 8% 0%, rgba(217,119,6,.09), transparent 34%), radial-gradient(ellipse at 100% 15%, rgba(74,14,23,.07), transparent 30%), var(--ivory);
     }
-
-    header {
-      padding: 2rem 1rem;
-    }
-
-    header h1 {
-      font-size: 2.5rem;
-      margin-top: 12vh;
-      font-weight: bold;
-      color: #8b0000;
-      text-shadow: 2px 2px 5px #ffd700;
-    }
-
-    #reader {
-      width: 90%;
-      max-width: 500px;
-      margin: 2rem auto;
-      border: 6px solid #ffd700;
-      border-radius: 20px;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-      background: rgba(255, 255, 255, 0.9);
-    }
-
-    #result {
-      margin: 2rem auto;
-      padding: 1rem;
-      max-width: 500px;
-      border-radius: 15px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    #result.success { background: #d4edda; color: #155724; }
-    #result.error { background: #f8d7da; color: #721c24; }
-    #result.info { background: #fff3cd; color: #856404; }
-
-    /* Headcount selection */
-    #attendee-selection {
-      display: none;
-      margin: 1.5rem auto;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-      padding: 1.2rem;
-      max-width: 400px;
-      color: #3b1f0d;
-    }
-
-    select {
-      font-size: 1.1rem;
-      padding: 0.4rem;
-      border-radius: 8px;
-      border: 2px solid #ffa500;
-      margin: 0.5rem;
-    }
-
-    button {
-      background: linear-gradient(135deg, #ffd700, #ff8c00);
-      color: #4b0000;
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25), 0 0 12px #ffcc00;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    button:hover {
-      transform: translateY(-2px) scale(1.05);
-      background: linear-gradient(135deg, #ffcc33, #ff6600);
-    }
-
-    nav {
-      margin: 2rem 0;
-      display: flex;
-      justify-content: center;
-      gap: 1.2rem;
-    }
-
-    nav a {
-      display: inline-block;
-      background: linear-gradient(135deg, #ffd700, #ff8c00);
-      color: #4b0000;
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 0.7rem 1.4rem;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25), 0 0 12px #ffcc00;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    nav a:hover {
-      background: linear-gradient(135deg, #ffcc33, #ff6600);
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.35), 0 0 18px #ff9900;
-      color: #4b0000;
-    }
-
-    footer {
-      margin-top: 3rem;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #3b1f0d;
-    }
-
-    #rescan-btn {
-      display: none;
-      margin: 1rem auto;
-    }
-
-    @media (max-width: 768px) {
-      header h1 { font-size: 2rem; margin-top: 8vh; }
-      #reader { width: 95%; }
-      #result { font-size: 1rem; }
-    }
+    .page-shell { width: min(760px, 100%); margin: 0 auto; }
+    .page-header { padding: 15px 4px 22px; text-align: center; }
+    .eyebrow { margin: 0 0 8px; color: var(--amber); font-size: .73rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1, h2 { color: var(--burgundy); }
+    .page-header h1 { margin: 0; font: 600 clamp(1.65rem, 5vw, 2.4rem)/1.15 "Cinzel", Georgia, serif; }
+    .subtitle { margin: 10px 0 0; color: var(--muted); font-size: .91rem; }
+    .scanner-card { padding: clamp(16px, 4vw, 28px); border: 1px solid rgba(255,255,255,.95); border-radius: 24px; background: var(--surface); box-shadow: var(--shadow); backdrop-filter: blur(14px); }
+    .scanner-instruction { margin: 0 0 14px; color: var(--muted); font-size: .84rem; text-align: center; }
+    #reader { width: 100%; max-width: 520px; margin: 0 auto 17px; overflow: hidden; border: 1px solid var(--line) !important; border-radius: 18px; background: #fff; box-shadow: 0 5px 16px rgba(31,41,55,.07); }
+    #reader video { border-radius: 16px; }
+    #reader button, #reader select { font-family: "Plus Jakarta Sans", sans-serif; }
+    #result { max-width: 520px; margin: 0 auto 14px; padding: 14px 16px; border: 1px solid transparent; border-radius: 14px; font-size: .9rem; font-weight: 600; line-height: 1.5; }
+    #result.info { border-color: #E9DCC8; background: #FBF4E8; color: #704A18; }
+    #result.success { border-color: #C8E7D3; background: #EDF8F0; color: #246644; }
+    #result.error { border-color: #F0C9C9; background: #FFF0F0; color: #8C2F36; }
+    #attendee-selection { display: none; max-width: 520px; margin: 0 auto 14px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.85); color: var(--slate); text-align: left; }
+    #attendee-selection p { margin: 0 0 12px; font-size: .91rem; }
+    select { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid #D9CFC4; border-radius: 11px; background: #fff; color: var(--slate); font: 600 1rem "Plus Jakarta Sans", sans-serif; }
+    button { min-height: 48px; padding: 11px 16px; border: 1px solid var(--burgundy); border-radius: 12px; background: var(--burgundy); color: #fff; font: 700 .9rem "Plus Jakarta Sans", sans-serif; cursor: pointer; transition: .18s ease; }
+    button:hover { transform: translateY(-1px); background: #641923; box-shadow: 0 8px 18px rgba(74,14,23,.16); }
+    button:focus-visible, nav a:focus-visible, select:focus-visible { outline: 3px solid rgba(217,119,6,.4); outline-offset: 2px; }
+    #submit-headcount { width: 100%; margin-top: 12px; }
+    #rescan-btn { display: none; width: 100%; max-width: 520px; margin: 0 auto; border-color: #E4C6B9; background: #FFF9F4; color: var(--burgundy); }
+    #rescan-btn:hover { background: #FFF0E7; }
+    nav { margin: 20px 0 0; display: flex; justify-content: center; gap: 10px; }
+    nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 15px; border: 1px solid #E7D9D0; border-radius: 12px; background: rgba(255,255,255,.75); color: var(--burgundy); font-size: .82rem; font-weight: 700; text-decoration: none; transition: .18s ease; }
+    nav a:hover { transform: translateY(-2px); border-color: #D8B7A8; background: #fff; box-shadow: 0 8px 18px rgba(74,14,23,.09); }
+    footer { padding: 18px 4px 4px; color: #8A8178; font-size: .76rem; text-align: center; }
+    @media (max-width: 480px) { body { padding: 14px 12px; } .scanner-card { padding: 13px; border-radius: 18px; } #attendee-selection { padding: 14px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+    :root { --burgundy: #4A0E17; --amber: #C98724; --ivory: #FFFCF7; --slate: #29252A; --muted: #746A68; --line: #E9DED2; --surface: rgba(255,253,249,.92); --shadow: 0 12px 30px -9px rgba(74,14,23,.15); }
+    body { font-family: "DM Sans", sans-serif; background: radial-gradient(ellipse at 10% 0%, rgba(201,135,36,.15), transparent 32%), radial-gradient(ellipse at 100% 20%, rgba(74,14,23,.09), transparent 32%), #FFFCF7; }
+    body::before { position: fixed; z-index: 5; inset: 0 0 auto; height: 7px; background: repeating-linear-gradient(90deg, #C98724 0 34px, #E7B96D 34px 40px, #A94E54 40px 74px, #F0D7B0 74px 80px); content: ""; }
+    .page-header { position: relative; overflow: hidden; margin: 4px 0 20px; padding: 28px 22px 26px; border: 1px solid rgba(255,255,255,.2); border-radius: 22px; background: linear-gradient(118deg, #421019 0%, #5D1C29 57%, #76333A 100%); box-shadow: 0 16px 36px -14px rgba(74,14,23,.38); }
+    .page-header::before { position: absolute; top: -150px; right: -82px; width: 310px; height: 310px; border: 1px solid rgba(235,190,112,.27); border-radius: 50%; background: radial-gradient(circle, transparent 0 35%, rgba(235,190,112,.10) 35.4% 36%, transparent 36.4% 49%, rgba(235,190,112,.16) 49.4% 50%, transparent 50.4%), repeating-conic-gradient(from 12deg, transparent 0 14deg, rgba(235,190,112,.12) 14.2deg 14.8deg, transparent 15deg 30deg); box-shadow: 0 0 0 18px rgba(235,190,112,.035), 0 0 0 42px rgba(235,190,112,.025); content: ""; }
+    .page-header::after { position: absolute; right: 0; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, transparent, #D6A653 22%, #F1D89E 50%, #D6A653 78%, transparent); content: ""; }
+    .page-header h1 { position: relative; z-index: 1; color: #FFF9EF; font-family: "Lora", Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.55rem); letter-spacing: -.04em; }
+    .page-header .eyebrow { position: relative; z-index: 1; color: #E9BE71; letter-spacing: .2em; }
+    .page-header .subtitle { position: relative; z-index: 1; color: rgba(255,249,239,.76); }
+    .scanner-card { border-color: #F0E0C9; background: rgba(255,253,249,.94); box-shadow: 0 16px 36px -14px rgba(74,14,23,.17); }
+    .scanner-instruction { color: #76645D; }
+    #reader { border: 1px solid #E6D6C4 !important; box-shadow: 0 8px 22px rgba(74,14,23,.08); }
+    #result.info { border-color: #EBD7AC; background: #FFF6E3; color: #76521B; }
+    #result.success { border-color: #C9E2CC; background: #EEF6EC; color: #28766A; }
+    #result.error { border-color: #EBC9C5; background: #FFF0ED; color: #8C3B3E; }
+    #attendee-selection { border-color: #E9DED2; background: #FFFAF2; }
+    button { border-color: #5A1723; background: #5A1723; }
+    button:hover { background: #702B37; }
+    #rescan-btn { border-color: #D9BA83; background: #FFF7E9; color: #65321D; }
+    #rescan-btn:hover { background: #FDF0D8; }
+    nav a { border-color: #6B2934; background: #5A1723; color: #FFF9EF; }
+    nav a:hover { border-color: #7B3C42; background: #702B37; color: #FFF9EF; }
+    @media (max-width: 480px) { .page-header { padding: 23px 14px; } .page-header::before { right: -190px; opacity: .75; } }
   </style>
 
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
-  <header>
-    <h1>🪔✨ Bay Area Diwali 2025 QR Code Scanner ✨🪔</h1>
+  <main class="page-shell">
+  <header class="page-header">
+    <p class="eyebrow">A community celebration of light</p>
+    <h1>QR check-in</h1>
+    <p class="subtitle">Scan a family pass to confirm event attendance</p>
   </header>
 
+  <section class="scanner-card" aria-label="QR check-in scanner">
+  <p class="scanner-instruction">Allow camera access and hold the QR code inside the frame.</p>
   <div id="reader"></div>
-  <div id="result" class="info">Scan a QR Code to check in</div>
+  <div id="result" class="info" role="status" aria-live="polite">Scan a QR Code to check in</div>
 
   <div id="attendee-selection">
     <p><strong>Select number of attendees to check in:</strong></p>
@@ -158,15 +96,16 @@
   </div>
 
   <button id="rescan-btn">🔄 Rescan</button>
+  </section>
 
   <nav>
     <a href="/">🏠 Home</a>
-    <a href="/admin">⚙️ Admin</a>
   </nav>
 
   <footer>
     <p>🌸 QR Scanner • Developed by Obla Family • With Blessings 🙏</p>
   </footer>
+  </main>
 
   <script>
     let scanner = null;
@@ -176,6 +115,10 @@
       const resultBox = document.getElementById("result");
       resultBox.className = type;
       resultBox.innerHTML = message;
+    }
+
+    function displaySweetKaram(value) {
+      return String(Number(value || 0));
     }
 
     function startScanner() {
@@ -218,7 +161,15 @@
             return;
           }
 
-          showResult(`Attendee: ${data.name} | Total Registered: ${data.party_count}`, 'info');
+          const sweetKaram = displaySweetKaram(data.sweet_karam);
+          if (data.checked_in) {
+            showResult(`Already Checked in, <strong>Issued</strong> ${sweetKaram} Sweet-Karam · ${data.name} · Checked in: ${data.checked_in_party_count}`, 'info');
+            document.getElementById('attendee-selection').style.display = 'none';
+            document.getElementById('rescan-btn').style.display = 'inline-block';
+            return;
+          }
+
+          showResult(`Attendee: ${data.name} | Registered: ${data.party_count} | Issue: ${sweetKaram} Sweet-Karam`, 'info');
 
           /*const select = document.getElementById('headcount');
           select.innerHTML = '';
@@ -253,7 +204,7 @@
               .then(res => res.json())
               .then(updateData => {
                 if (updateData.status === "success") {
-                  showResult(`✅ Checked in ${count} attendees for ${data.name}`, 'success');
+                  showResult(`✅ Checked in: ${updateData.checked_in_party_count} · ${updateData.name} · Issue: ${displaySweetKaram(updateData.sweet_karam)} Sweet-Karam`, 'success');
                 } else {
                   showResult(updateData.message || 'Failed to update', 'error');
                 }

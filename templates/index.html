@@ -3,166 +3,133 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bay Area Diwali 2025 Check-In Dashboard</title>
-  <!-- 🌸 Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Bay Area Diwali Check-In Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* 🌸 Diwali Background */
+    :root {
+      color-scheme: light;
+      --burgundy: #4A0E17;
+      --burgundy-2: #681c28;
+      --amber: #D97706;
+      --ivory: #FFFDF9;
+      --slate: #1F2937;
+      --muted: #6B7280;
+      --line: #E9E2D9;
+      --surface: rgba(255, 255, 255, .78);
+      --shadow: 0 10px 25px -5px rgba(31, 41, 55, .10);
+    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      padding: 0;
-      font-family: "Quicksand", sans-serif;
-      background: linear-gradient(rgba(255, 200, 150, 0.5), rgba(255, 170, 120, 0.5)),
-                  url('/static/images/diwali-7.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #3b1f0d;
-      text-align: center;
+      min-height: 100vh;
+      padding: 28px 20px 18px;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      color: var(--slate);
+      background: radial-gradient(ellipse at 8% 0%, rgba(217,119,6,.09), transparent 34%),
+                  radial-gradient(ellipse at 100% 15%, rgba(74,14,23,.07), transparent 30%), var(--ivory);
     }
-
-    header {
-      padding: 2rem 1rem;
+    .page-shell { width: min(1120px, 100%); margin: 0 auto; }
+    .page-header { padding: 16px 4px 24px; text-align: left; }
+    .eyebrow { margin: 0 0 8px; color: var(--amber); font-size: .75rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1, h2 { color: var(--burgundy); }
+    .page-header h1 {
+      margin: 0;
+      font: 600 clamp(1.8rem, 4vw, 2.65rem)/1.15 "Cinzel", Georgia, serif;
+      letter-spacing: -.035em;
     }
-
-    header h1 {
-      font-size: 2.5rem;
-      margin-top: 12vh;
-      font-weight: bold;
-      color: #8b0000;
-      text-shadow: 2px 2px 5px #ffd700;
-      text-align: center;
-    }
-
-    /* ✨ Stats Cards */
+    .subtitle { margin: 10px 0 0; color: var(--muted); font-size: .96rem; }
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      padding: 2rem;
-      margin: 0 auto;
-      max-width: 1000px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin: 0 0 22px;
     }
-
     .stat-card {
-      background: linear-gradient(135deg, #fff1d6, #ffe5b4);
-      border-radius: 20px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.25), 0 0 15px #ffcc00;
-      padding: 1.5rem;
-      transition: transform 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      min-height: 126px;
+      padding: 21px 22px;
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      transition: transform .2s ease, box-shadow .2s ease;
     }
-
-    .stat-card:hover {
-      transform: translateY(-6px) scale(1.03);
-    }
-
-    .stat-card h2 {
-      font-size: 1.2rem;
-      margin: 0 0 0.5rem 0;
-      font-weight: 600;
-      color: #8b0000;
-    }
-
-    .stat-card p {
-      font-size: 1.7rem;
-      margin: 0;
-      font-weight: 700;
-      color: #3b1f0d;
-    }
-
-    /* 📊 Recent Check-ins Table */
+    .stat-card::before { position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--amber); content: ""; }
+    .stat-card:nth-child(2)::before { background: #8C5A2B; }
+    .stat-card:nth-child(3)::before { background: #27805C; }
+    .stat-card:nth-child(4)::before { background: var(--burgundy); }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 16px 30px -8px rgba(31,41,55,.16); }
+    .stat-card h2 { margin: 0 0 13px; color: var(--muted); font-size: .79rem; font-weight: 700; letter-spacing: .035em; }
+    .stat-card p { margin: 0; color: var(--slate); font-size: clamp(1.7rem, 3vw, 2.1rem); font-weight: 800; line-height: 1; }
     .table-container {
-      max-width: 1000px;
-      margin: 2rem auto;
-      background: linear-gradient(135deg, #fff1d6, #ffe5b4);
-      border-radius: 16px;
-      padding: 1.2rem;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.3), 0 0 20px #ffcc00;
-      overflow-x: auto;
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,.92);
+      border-radius: 20px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.95rem;
-      color: #3b1f0d; /* dark font */
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 0.6rem;
-      text-align: center;
-      color: #3b1f0d; /* ensure all cells are readable */
-    }
-
-    th {
-      background: linear-gradient(135deg, #ffd700, #ffa500);
-      color: #8b0000;
-      font-weight: 700;
-      text-shadow: 1px 1px #fff8dc;
-    }
-
-    tr:nth-child(even) {
-      background-color: #fffaf0;
-    }
-
-    tr:hover {
-      background-color: #fff3d6;
-    }
-
-    /* 🪔 Navigation Buttons */
+    .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 18px; }
+    .section-heading h2 { margin: 0; font: 600 1.25rem "Cinzel", Georgia, serif; }
+    .live-badge { display: inline-flex; align-items: center; gap: 7px; padding: 6px 10px; border-radius: 999px; background: #EAF6EF; color: #246644; font: 700 .72rem "Plus Jakarta Sans", sans-serif; white-space: nowrap; }
+    .live-badge::before { width: 7px; height: 7px; border-radius: 50%; background: #2F9B63; content: ""; box-shadow: 0 0 0 3px rgba(47,155,99,.12); }
+    .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+    table { width: 100%; min-width: 620px; border-collapse: separate; border-spacing: 0; font-size: .88rem; text-align: left; }
+    th { position: sticky; top: 0; z-index: 1; padding: 13px 16px; background: #F8F4EF; color: #6B5147; font-size: .72rem; font-weight: 800; letter-spacing: .065em; text-align: left; text-transform: uppercase; }
+    td { padding: 14px 16px; border-top: 1px solid var(--line); color: #374151; white-space: nowrap; }
+    tbody tr { transition: background .16s ease; }
+    tbody tr:nth-child(even) { background: rgba(248,244,239,.48); }
+    tbody tr:hover { background: #FFF7EB; }
+    .empty-state { color: var(--muted); text-align: center; }
     nav {
-      margin: 2rem 0;
+      margin: 22px 0 0;
       display: flex;
-      justify-content: center;
-      gap: 1.2rem;
+      justify-content: flex-start;
+      gap: 10px;
     }
-
-    nav a {
-      display: inline-block;
-      background: linear-gradient(135deg, #ffd700, #ff8c00);
-      color: #4b0000;
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 0.7rem 1.4rem;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25), 0 0 12px #ffcc00;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    nav a:hover {
-      background: linear-gradient(135deg, #ffcc33, #ff6600);
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.35), 0 0 18px #ff9900;
-      color: #4b0000;
-    }
-
-    footer {
-      margin-top: 3rem;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #3b1f0d;
-    }
-
-    @media (max-width: 768px) {
-      header h1 {
-        font-size: 2rem;
-        margin-top: 8vh;
-      }
-      .stat-card p {
-        font-size: 1.5rem;
-      }
-      table th, table td {
-        font-size: 0.9rem;
-        padding: 0.5rem;
-      }
-    }
+    nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 15px; border: 1px solid #E7D9D0; border-radius: 12px; background: rgba(255,255,255,.75); color: var(--burgundy); font-size: .84rem; font-weight: 700; text-decoration: none; transition: .18s ease; }
+    nav a:hover { transform: translateY(-2px); border-color: #D8B7A8; background: #fff; box-shadow: 0 8px 18px rgba(74,14,23,.09); }
+    footer { padding: 24px 4px 4px; color: #8A8178; font-size: .78rem; }
+    @media (max-width: 760px) { body { padding: 18px 14px; } .stats { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 11px; } .stat-card { min-height: 110px; padding: 17px; } .table-container { padding: 15px; } }
+    @media (max-width: 420px) { .section-heading { align-items: flex-start; flex-direction: column; } .stats { gap: 9px; } .stat-card h2 { font-size: .7rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+    :root { --burgundy: #4A0E17; --burgundy-2: #702B37; --amber: #C98724; --ivory: #FFFCF7; --slate: #29252A; --muted: #746A68; --line: #E9DED2; --surface: rgba(255,253,249,.88); --shadow: 0 12px 30px -9px rgba(74,14,23,.15); }
+    body { font-family: "DM Sans", sans-serif; background: radial-gradient(ellipse at 8% 0%, rgba(201,135,36,.13), transparent 32%), radial-gradient(ellipse at 100% 15%, rgba(74,14,23,.09), transparent 32%), #FFFCF7; }
+    body::before { position: fixed; z-index: 5; inset: 0 0 auto; height: 7px; background: repeating-linear-gradient(90deg, #C98724 0 34px, #E7B96D 34px 40px, #A94E54 40px 74px, #F0D7B0 74px 80px); content: ""; }
+    .page-header { position: relative; overflow: hidden; margin: 4px 0 23px; padding: 31px 34px 30px; border: 1px solid rgba(255,255,255,.2); border-radius: 22px; background: linear-gradient(118deg, #421019 0%, #5D1C29 57%, #76333A 100%); box-shadow: 0 16px 36px -14px rgba(74,14,23,.38); }
+    .page-header::before { position: absolute; top: -104px; right: -34px; width: 310px; height: 310px; border: 1px solid rgba(235,190,112,.27); border-radius: 50%; background: radial-gradient(circle, transparent 0 35%, rgba(235,190,112,.10) 35.4% 36%, transparent 36.4% 49%, rgba(235,190,112,.16) 49.4% 50%, transparent 50.4%), repeating-conic-gradient(from 12deg, transparent 0 14deg, rgba(235,190,112,.12) 14.2deg 14.8deg, transparent 15deg 30deg); box-shadow: 0 0 0 18px rgba(235,190,112,.035), 0 0 0 42px rgba(235,190,112,.025); content: ""; }
+    .page-header::after { position: absolute; right: 0; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, transparent, #D6A653 22%, #F1D89E 50%, #D6A653 78%, transparent); content: ""; }
+    .page-header h1 { position: relative; z-index: 1; color: #FFF9EF; font-family: "Lora", Georgia, serif; font-size: clamp(2rem, 4.5vw, 3.1rem); letter-spacing: -.045em; }
+    .page-header .eyebrow { position: relative; z-index: 1; color: #E9BE71; letter-spacing: .2em; }
+    .page-header .subtitle { position: relative; z-index: 1; color: rgba(255,249,239,.76); }
+    .stat-card { border-color: #F0E5D8; border-radius: 16px; background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(255,248,238,.82)); }
+    .stat-card::before { width: 5px; background: #D89A34; }
+    .stat-card:nth-child(2)::before { background: #B15C53; }
+    .stat-card:nth-child(3)::before { background: #28766A; }
+    .stat-card:nth-child(4)::before { background: #6E3451; }
+    .stat-card h2 { color: #786B65; font-size: .76rem; letter-spacing: .055em; text-transform: uppercase; }
+    .stat-card p { color: #38242A; font-family: "Lora", Georgia, serif; font-size: clamp(2rem, 3vw, 2.5rem); }
+    .table-container { border-color: #F0E5D8; background: rgba(255,253,249,.91); }
+    .section-heading h2 { font-family: "Lora", Georgia, serif; font-size: 1.4rem; }
+    .live-badge { background: #EAF3EC; color: #28766A; }
+    th { background: #F7EEE4; color: #715A51; }
+    tbody tr:nth-child(even) { background: rgba(250,243,234,.58); }
+    tbody tr:hover { background: #FFF3DF; }
+    nav a { border-color: #6B2934; background: #5A1723; color: #FFF9EF; }
+    nav a:hover { border-color: #7B3C42; background: #702B37; color: #FFF9EF; }
+    @media (max-width: 760px) { .page-header { padding: 25px 22px; } .page-header::before { right: -150px; opacity: .78; } }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🪔 Bay Area Diwali 2025 Check-In Dashboard 🪔</h1>
+  <main class="page-shell">
+  <header class="page-header">
+    <p class="eyebrow">A community celebration of light</p>
+    <h1>Bay Area Diwali</h1>
+    <p class="subtitle">Registration and check-in at a glance</p>
   </header>
 
   <div class="stats">
@@ -171,7 +138,7 @@
       <p>{{ total_attendees }}</p>
     </div>
     <div class="stat-card">
-      <h2>Total Headcount</h2>
+      <h2>Total Registered Headcount</h2>
       <p>{{ total_party_count }}</p>
     </div>
     <div class="stat-card">
@@ -185,8 +152,9 @@
   </div>
 
   <!-- ✅ Recent Check-ins -->
-  <div class="table-container">
-    <h2 style="color:#8b0000; margin-bottom:1rem;">Recent Check-ins  <span class="live-badge">🟢 Live Updating</span></h2>
+  <section class="table-container">
+    <div class="section-heading"><h2>Recent check-ins</h2><span class="live-badge">Live updating</span></div>
+    <div class="table-scroll">
     <table id="recent-checkins">
       <thead>
         <tr>
@@ -212,21 +180,23 @@
         </tr>
         {% else %}
         <tr>
-          <td colspan="3">No check-ins yet</td>
+          <td class="empty-state" colspan="4">No check-ins yet</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-  </div>
+    </div>
+  </section>
 
   <nav>
     <a href="/">🏠 Home</a>
-    <a href="/admin">⚙️ Admin</a>
+    <a href="/dashboard">📋 Attendee dashboard</a>
   </nav>
 
   <footer>
     <p>🌸 Developed by Obla Family • With Blessings 🙏</p>
   </footer>
+  </main>
 
 <script>
 async function refreshRecentCheckins() {
