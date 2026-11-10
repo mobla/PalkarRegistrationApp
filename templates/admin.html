@@ -81,6 +81,9 @@
     .page-header { position: relative; overflow: hidden; margin: 4px 0 23px; padding: 31px 34px 30px; border: 1px solid rgba(255,255,255,.2); border-radius: 22px; background: linear-gradient(118deg, #421019 0%, #5D1C29 57%, #76333A 100%); box-shadow: 0 16px 36px -14px rgba(74,14,23,.38); }
     .page-header::before { position: absolute; top: -104px; right: -34px; width: 310px; height: 310px; border: 1px solid rgba(235,190,112,.27); border-radius: 50%; background: radial-gradient(circle, transparent 0 35%, rgba(235,190,112,.10) 35.4% 36%, transparent 36.4% 49%, rgba(235,190,112,.16) 49.4% 50%, transparent 50.4%), repeating-conic-gradient(from 12deg, transparent 0 14deg, rgba(235,190,112,.12) 14.2deg 14.8deg, transparent 15deg 30deg); box-shadow: 0 0 0 18px rgba(235,190,112,.035), 0 0 0 42px rgba(235,190,112,.025); content: ""; }
     .page-header::after { position: absolute; right: 0; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, transparent, #D6A653 22%, #F1D89E 50%, #D6A653 78%, transparent); content: ""; }
+    .page-title-row { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-right: -10px; }
+    .page-title-row h1 { flex: 1; min-width: 0; }
+    .diya-art { display: block; flex: 0 0 auto; width: clamp(145px, 20vw, 270px); height: auto; opacity: .92; pointer-events: none; }
     .page-header h1 { position: relative; z-index: 1; color: #FFF9EF; font-family: "Lora", Georgia, serif; font-size: clamp(2rem, 4.5vw, 3.1rem); letter-spacing: -.045em; }
     .page-header .eyebrow { position: relative; z-index: 1; color: #E9BE71; letter-spacing: .2em; }
     .page-header .subtitle { position: relative; z-index: 1; color: rgba(255,249,239,.76); }
@@ -103,7 +106,7 @@
     button:hover:not(:disabled) { border-color: #C98724; background: #FDF0D8; }
     nav a { border-color: #6B2934; background: #5A1723; color: #FFF9EF; }
     nav a:hover { border-color: #7B3C42; background: #702B37; color: #FFF9EF; }
-    @media (max-width: 760px) { .page-header { padding: 25px 22px; } .page-header::before { right: -150px; opacity: .78; } }
+    @media (max-width: 760px) { .page-header { padding: 25px 22px; } .page-header::before { right: -150px; opacity: .78; } .page-title-row { gap: 12px; } .diya-art { width: clamp(108px, 27vw, 140px); } .page-title-row h1 { font-size: clamp(1.35rem, 5.8vw, 1.65rem); } }
     .workflow-panel { display: grid; grid-template-columns: minmax(190px,.85fr) repeat(2,minmax(0,1fr)); gap: 14px; margin: 0 0 22px; padding: 17px; border: 1px solid #E9D8C2; border-radius: 18px; background: linear-gradient(110deg,rgba(255,249,237,.96),rgba(255,255,255,.86)); box-shadow: 0 9px 24px -12px rgba(74,14,23,.16); }
     .workflow-intro { align-self: center; padding: 3px 6px; }
     .workflow-kicker { color: #A26A24; font-size: .66rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
@@ -134,7 +137,7 @@
   <main class="page-shell">
   <header class="page-header">
     <p class="eyebrow">Backstage · Bay Area Diwali</p>
-    <h1>Admin &amp; email tools</h1>
+    <div class="page-title-row"><h1>Admin Tools</h1><img class="diya-art" src="{{ url_for('static', filename='diya-cluster.svg') }}" alt="" aria-hidden="true"></div>
     <p class="subtitle">Sync registrations, send QR passes, and help individual families</p>
   </header>
 
