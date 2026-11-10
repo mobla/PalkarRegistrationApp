@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" fill="none">
+  <defs>
+    <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#FFF6C4"/>
+      <stop offset=".48" stop-color="#F6BE52"/>
+      <stop offset="1" stop-color="#E87524"/>
+    </linearGradient>
+    <linearGradient id="bowl" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#D58A48"/>
+      <stop offset="1" stop-color="#702B2C"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop stop-color="#F8C76A" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#F8C76A" stop-opacity="0"/>
+    </radialGradient>
+    <g id="diya">
+      <ellipse cx="50" cy="49" rx="36" ry="17" fill="url(#glow)"/>
+      <path d="M49 42c-10-11 1-19 2-31 12 13 13 23 2 32" fill="url(#flame)"/>
+      <path d="M30 50c10 6 30 6 40 0-2 17-10 24-20 24S32 67 30 50Z" fill="url(#bowl)" stroke="#E8B967" stroke-width="2"/>
+      <ellipse cx="50" cy="50" rx="20" ry="4.5" fill="#F0C678"/>
+      <path d="M40 72h20l-5 5H45l-5-5Z" fill="#9A5A3A" stroke="#E8B967" stroke-width="1.5"/>
+      <circle cx="50" cy="61" r="2" fill="#F3D48F"/>
+    </g>
+  </defs>
+  <g opacity=".9">
+    <use href="#diya" transform="translate(4 22) scale(.72)"/>
+    <use href="#diya" transform="translate(76 4) scale(1)"/>
+    <use href="#diya" transform="translate(178 22) scale(.72)"/>
+  </g>
+</svg>
